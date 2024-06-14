@@ -1,6 +1,8 @@
 package com.project.BankingApp.service.impl;
 
+import com.project.BankingApp.Mapper.AccountMapper;
 import com.project.BankingApp.dto.AccountDto;
+import com.project.BankingApp.entity.Account;
 import com.project.BankingApp.repository.AccountRepository;
 import com.project.BankingApp.service.AccountService;
 import org.springframework.stereotype.Service;
@@ -16,8 +18,28 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto createAccount(AccountDto accountDto) {
-        return null;
+
+        Account account = AccountMapper.mapToAccount(accountDto);
+        Account savedAccount = accountRepository.save(account);
+        return AccountMapper.mapToAccountDto(savedAccount);
     }
 
+    @Override
+    public AccountDto getAccountById(Long id) {
+
+     Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account does not exist"));
+        return AccountMapper.mapToAccountDto(account);
+    }
+
+    @Override
+    public AccountDto deposit(Long id, double amount) {
+
+        Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account does not exist"));
+
+       double total =  account.getBalance() + amount;
+       account.setBalance(total);
+       Account savedAccount = accountRepository.save(account);
+        return AccountMapper.mapToAccountDto(savedAccount);
+    }
 
 }
