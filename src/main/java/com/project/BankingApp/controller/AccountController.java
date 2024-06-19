@@ -1,6 +1,7 @@
 package com.project.BankingApp.controller;
 
 import com.project.BankingApp.dto.AccountDto;
+import com.project.BankingApp.dto.TransactionDto;
 import com.project.BankingApp.dto.TransferFundDto;
 import com.project.BankingApp.service.AccountService;
 import org.springframework.http.HttpStatus;
@@ -78,6 +79,15 @@ public class AccountController {
     public ResponseEntity<String>transferFund(@RequestBody TransferFundDto transferFundDto){
         accountService.transferFunds(transferFundDto);
         return ResponseEntity.ok("Transfer Successfull");
+    }
+
+    // Build transaction REST API
+    @GetMapping("/{id}/transactions")
+    public ResponseEntity<List<TransactionDto>>fetchAccountTransactions(Long accountId){
+
+        List<TransactionDto>transactions = accountService.getAccountTransactions(accountId);
+
+        return ResponseEntity.ok(transactions);
     }
 }
 
